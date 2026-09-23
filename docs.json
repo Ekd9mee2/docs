@@ -100,5 +100,6 @@
     "socials": {
       "x": "https://x.com/oceanwallet"
     }
-  }
+  },
+  "description": "Base URL, chave de API e formato das respostas"
 }
