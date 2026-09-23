@@ -1,7 +1,7 @@
 ---
-title: "Webhooks API: Receive Real-Time Payment Events"
+title: "Webhooks API: Real-Time Event Notifications for Payments"
 sidebarTitle: "Webhooks"
-description: "Set up webhooks to receive instant HTTP POST notifications when transactions complete, deposits settle, or payment links are paid in your Ocean Wallet account."
+description: "Set up webhooks to receive instant HTTP POST notifications when transactions complete, deposits settle, or payment links are paid in your Ocean Wallet."
 ---
 
 Webhooks let you receive real-time HTTP POST callbacks whenever important events occur in your Ocean Wallet account — no polling required. When an event fires, Ocean Wallet sends a signed JSON payload to the HTTPS URL you register. Use webhooks to trigger fulfillment logic, update your database, send notifications to your users, or reconcile your ledger automatically.
@@ -65,29 +65,59 @@ The verification process is straightforward: recompute the HMAC-SHA256 digest of
 ```javascript Node.js
 const crypto = require('crypto');
 
-function verifySignature(body, signature, secret) {
+function verifySignature(rawBody, signature, secret) {
   const expected = crypto
     .createHmac('sha256', secret)
-    .update(body)
+    .update(rawBody)
     .digest('hex');
   return crypto.timingSafeEqual(
-    Buffer.from(expected),
-    Buffer.from(signature)
+    Buffer.from(expected, 'hex'),
+    Buffer.from(signature, 'hex')
   );
 }
+
+// Express.js example — use express.raw() to preserve the raw body
+app.post('/webhooks', express.raw({ type: 'application/json' }), (req, res) => {
+  const sig = req.headers['x-oceanwallet-signature'];
+  const secret = process.env.WEBHOOK_SECRET;
+  if (!verifySignature(req.body, sig, secret)) {
+    return res.status(401).send('Invalid signature');
+  }
+  const event = JSON.parse(req.body);
+  // Handle event.event here
+  res.sendStatus(200);
+});
 ```
 
 ```python Python
 import hmac
 import hashlib
+import os
 
-def verify_signature(body: bytes, signature: str, secret: str) -> bool:
+def verify_signature(raw_body: bytes, signature: str, secret: str) -> bool:
     expected = hmac.new(
         secret.encode('utf-8'),
-        body,
+        raw_body,
         hashlib.sha256
     ).hexdigest()
     return hmac.compare_digest(expected, signature)
+
+# Flask example — use request.get_data() to preserve the raw body
+from flask import Flask, request, abort
+import json
+
+app = Flask(__name__)
+
+@app.route('/webhooks', methods=['POST'])
+def handle_webhook():
+    raw_body = request.get_data()
+    signature = request.headers.get('X-OceanWallet-Signature', '')
+    secret = os.environ['WEBHOOK_SECRET']
+    if not verify_signature(raw_body, signature, secret):
+        abort(401)
+    event = json.loads(raw_body)
+    # Handle event['event'] here
+    return '', 200
 ```
 
 </CodeGroup>
@@ -114,11 +144,11 @@ Register a new webhook endpoint to begin receiving event notifications.
   A secret string used to sign outgoing payloads via HMAC-SHA256. Store this securely — you will need it to verify incoming signatures. Minimum 16 characters.
 </ParamField>
 
-```bash cURL
+```bash
 curl -X POST https://api.oceanwallet.com/v1/webhooks \
-  -H "Authorization: Bearer ocn_live_yourapikey" \
+  -H "Authorization: Bearer ocn_live_4f8a2c9d7e3b1f6a" \
   -H "Content-Type: application/json" \
-  -d '{"url": "https://yourapp.com/webhooks", "events": ["transaction.completed"], "secret": "whsec_your_secret"}'
+  -d '{"url": "https://yourapp.com/webhooks", "events": ["transaction.completed", "payment_link.paid"], "secret": "whsec_m9p2xK4rT8nQ1vJd"}'
 ```
 
 **Response `201 Created`**
@@ -127,7 +157,7 @@ curl -X POST https://api.oceanwallet.com/v1/webhooks \
 {
   "id": "wh_ghi789",
   "url": "https://yourapp.com/webhooks",
-  "events": ["transaction.completed"],
+  "events": ["transaction.completed", "payment_link.paid"],
   "status": "active",
   "created_at": "2024-03-15T11:00:00Z"
 }
@@ -159,9 +189,9 @@ curl -X POST https://api.oceanwallet.com/v1/webhooks \
 
 Retrieve a list of all webhook endpoints registered on your account.
 
-```bash cURL
+```bash
 curl https://api.oceanwallet.com/v1/webhooks \
-  -H "Authorization: Bearer ocn_live_yourapikey"
+  -H "Authorization: Bearer ocn_live_4f8a2c9d7e3b1f6a"
 ```
 
 **Response `200 OK`**
@@ -172,7 +202,7 @@ curl https://api.oceanwallet.com/v1/webhooks \
     {
       "id": "wh_ghi789",
       "url": "https://yourapp.com/webhooks",
-      "events": ["transaction.completed"],
+      "events": ["transaction.completed", "payment_link.paid"],
       "status": "active",
       "created_at": "2024-03-15T11:00:00Z"
     }
@@ -193,9 +223,9 @@ Permanently delete a registered webhook. Ocean Wallet will immediately stop send
   The unique webhook ID to delete (e.g. `wh_ghi789`).
 </ParamField>
 
-```bash cURL
+```bash
 curl -X DELETE https://api.oceanwallet.com/v1/webhooks/wh_ghi789 \
-  -H "Authorization: Bearer ocn_live_yourapikey"
+  -H "Authorization: Bearer ocn_live_4f8a2c9d7e3b1f6a"
 ```
 
 **Response `204 No Content`**

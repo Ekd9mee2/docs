@@ -1,7 +1,7 @@
 ---
-title: "Payments API: Create and Manage Payment Links"
+title: "Payment Links API: Create, List, and Deactivate Links"
 sidebarTitle: "Payments"
-description: "Use the Payments API to create shareable payment links, list and inspect existing links, and deactivate links you no longer want to accept payments through."
+description: "Use the Payments API to create shareable payment links, list and inspect existing links, and deactivate links when payments are no longer needed."
 ---
 
 The Payments API lets you generate shareable payment links that anyone can use to send money directly to your Ocean Wallet — no account required on the payer's side. You can set a fixed amount or leave the link open for the payer to specify, attach expiry dates, and deactivate links at any time. Payment links are ideal for invoices, checkout flows, and fundraising pages.
@@ -28,11 +28,11 @@ Create a new payment link. Once created, share the returned `url` with anyone yo
   An optional ISO 8601 datetime after which the link automatically transitions to `expired` and can no longer be paid (e.g. `2024-12-31T23:59:59Z`). Omit to create a link with no expiry.
 </ParamField>
 
-```bash cURL
+```bash
 curl -X POST https://api.oceanwallet.com/v1/payments/links \
-  -H "Authorization: Bearer ocn_live_yourapikey" \
+  -H "Authorization: Bearer ocn_live_4f8a2c9d7e3b1f6a" \
   -H "Content-Type: application/json" \
-  -d '{"title": "Invoice #42", "amount": 150.00}'
+  -d '{"title": "Invoice #42", "amount": 150.00, "description": "Web design services – March 2024"}'
 ```
 
 **Response `201 Created`**
@@ -59,12 +59,28 @@ curl -X POST https://api.oceanwallet.com/v1/payments/links \
   The fully-qualified, shareable URL for this payment link (e.g. `https://pay.oceanwallet.com/l/def456`). Send this to your customers or embed it in your application.
 </ResponseField>
 
+<ResponseField name="title" type="string">
+  The label displayed to the payer on the payment page.
+</ResponseField>
+
+<ResponseField name="amount" type="number">
+  The fixed payment amount in USD, or `null` if the link is open-amount.
+</ResponseField>
+
+<ResponseField name="currency" type="string">
+  The currency for this payment link. Currently always `USD`.
+</ResponseField>
+
 <ResponseField name="status" type="string">
   The current state of the link: `active` (accepting payments), `inactive` (manually deactivated), or `expired` (past its `expires_at` datetime).
 </ResponseField>
 
 <ResponseField name="total_collected" type="number">
   The cumulative USD amount collected through this link across all payments. Useful for tracking progress toward a fundraising goal or verifying invoice settlement.
+</ResponseField>
+
+<ResponseField name="created_at" type="string">
+  ISO 8601 timestamp for when this payment link was created.
 </ResponseField>
 
 <ResponseField name="expires_at" type="string">
@@ -85,9 +101,9 @@ Retrieve a paginated list of all payment links on your account. Filter by status
   Filter results by link status. Accepted values: `active`, `inactive`, `expired`.
 </ParamField>
 
-```bash cURL
+```bash
 curl 'https://api.oceanwallet.com/v1/payments/links?status=active' \
-  -H "Authorization: Bearer ocn_live_yourapikey"
+  -H "Authorization: Bearer ocn_live_4f8a2c9d7e3b1f6a"
 ```
 
 **Response `200 OK`**
@@ -123,9 +139,9 @@ Retrieve the full details of a single payment link by its ID.
   The unique payment link ID (e.g. `lnk_def456`).
 </ParamField>
 
-```bash cURL
+```bash
 curl https://api.oceanwallet.com/v1/payments/links/lnk_def456 \
-  -H "Authorization: Bearer ocn_live_yourapikey"
+  -H "Authorization: Bearer ocn_live_4f8a2c9d7e3b1f6a"
 ```
 
 The response returns the full payment link object, identical in shape to the `POST /payments/links` response above.
@@ -140,9 +156,9 @@ Deactivate a payment link so it can no longer be used to collect payments. This 
   The unique payment link ID to deactivate (e.g. `lnk_def456`).
 </ParamField>
 
-```bash cURL
+```bash
 curl -X DELETE https://api.oceanwallet.com/v1/payments/links/lnk_def456 \
-  -H "Authorization: Bearer ocn_live_yourapikey"
+  -H "Authorization: Bearer ocn_live_4f8a2c9d7e3b1f6a"
 ```
 
 **Response `204 No Content`**

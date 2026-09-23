@@ -1,5 +1,5 @@
 ---
-title: "Wallets API: Retrieve Wallet and Balance Data"
+title: "Wallets API: Fetch Account Details and Live Balances"
 sidebarTitle: "Wallets"
 description: "Use the Wallets API to retrieve your Ocean Wallet account details and check your current available and pending balance in real time."
 ---
@@ -12,9 +12,9 @@ The Wallets API gives you direct access to your Ocean Wallet account information
 
 Retrieve the details associated with your authenticated wallet account, including its unique ID, registered email address, and current status.
 
-```bash cURL
+```bash
 curl https://api.oceanwallet.com/v1/wallets \
-  -H "Authorization: Bearer ocn_live_yourapikey"
+  -H "Authorization: Bearer ocn_live_4f8a2c9d7e3b1f6a"
 ```
 
 **Response `200 OK`**
@@ -54,9 +54,9 @@ Retrieve the current balance for a specific wallet, broken down into available a
   The unique wallet ID (e.g. `ocn_wlt_abc123xyz`). You can obtain this from the `GET /wallets` response.
 </ParamField>
 
-```bash cURL
+```bash
 curl https://api.oceanwallet.com/v1/wallets/ocn_wlt_abc123xyz/balance \
-  -H "Authorization: Bearer ocn_live_yourapikey"
+  -H "Authorization: Bearer ocn_live_4f8a2c9d7e3b1f6a"
 ```
 
 **Response `200 OK`**
