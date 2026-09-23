@@ -1,0 +1,67 @@
+---
+title: "API Error Codes and Troubleshooting"
+sidebarTitle: "Errors"
+description: "Understand the HTTP status codes, JSON error response shape, and common error codes returned by the Ocean Wallet API to debug issues faster."
+---
+
+The Ocean Wallet API uses standard HTTP status codes to signal the outcome of every request. When a request fails, the API returns a consistent JSON error body alongside the status code so you always know exactly what went wrong and how to fix it.
+
+## Error Response Format
+
+Every error response contains a single top-level `error` object with three fields. Here is an example of what an error response looks like:
+
+```json
+{
+  "error": {
+    "code": "insufficient_funds",
+    "message": "Your wallet balance is insufficient to complete this transaction.",
+    "request_id": "req_abc123"
+  }
+}
+```
+
+<ResponseField name="error.code" type="string" required>
+  A machine-readable string that identifies the specific error. Use this field in your application logic to handle different failure cases programmatically.
+</ResponseField>
+
+<ResponseField name="error.message" type="string" required>
+  A human-readable sentence describing what went wrong. This message is intended for developers during debugging — do not display it directly to end users without review.
+</ResponseField>
+
+<ResponseField name="error.request_id" type="string" required>
+  A unique identifier for the specific API request that failed. Include this value whenever you contact Ocean Wallet support so the team can locate and investigate the request immediately.
+</ResponseField>
+
+<Tip>
+  Every error response includes a `request_id`. Always log this value and include it in any support ticket or bug report — it is the fastest way for the Ocean Wallet team to trace and resolve your issue.
+</Tip>
+
+## HTTP Status Codes
+
+The table below summarises every HTTP status code the Ocean Wallet API can return and what each one means for your integration.
+
+| Status Code | Meaning |
+|-------------|---------|
+| `200 OK` | The request succeeded and the response body contains the result. |
+| `201 Created` | A new resource was successfully created. The response body contains the created object. |
+| `400 Bad Request` | The request was malformed or contained invalid parameters. Check your request structure. |
+| `401 Unauthorized` | No API key was provided, or the key is invalid or revoked. |
+| `403 Forbidden` | The API key is valid, but it does not have the required scope for this action. |
+| `404 Not Found` | The requested resource does not exist or you do not have access to it. |
+| `422 Unprocessable Entity` | The request body is valid JSON but fails business-logic validation. Check the `error.message` for details. |
+| `429 Too Many Requests` | You have exceeded the rate limit of 100 requests per minute for this API key. Implement exponential backoff and retry. |
+| `500 Internal Server Error` | An unexpected error occurred on Ocean Wallet's servers. If this persists, check the [status page](https://status.oceanwallet.com) and contact support. |
+
+## Common Error Codes
+
+The `error.code` field will contain one of the following machine-readable values. Use these codes to build targeted error handling in your integration.
+
+| Error Code | Description |
+|------------|-------------|
+| `invalid_api_key` | The API key in the `Authorization` header is missing, malformed, or has been revoked. Verify the key and ensure it is prefixed correctly (`ocn_live_` or `ocn_test_`). |
+| `insufficient_funds` | The source wallet does not have enough balance to complete the requested transaction. |
+| `daily_limit_exceeded` | The transaction would exceed the account's daily send limit. The limit resets at midnight UTC. |
+| `recipient_not_found` | The recipient identifier (wallet ID, email, or handle) provided in the request does not match any known account. |
+| `account_not_verified` | The account must complete identity verification before this action is permitted. Direct the user to the dashboard to complete verification. |
+| `validation_error` | One or more fields in the request body failed validation. Check `error.message` for the specific field and constraint that failed. |
+| `rate_limit_exceeded` | Your API key has sent too many requests in a short period. Back off and retry using an exponential backoff strategy. |

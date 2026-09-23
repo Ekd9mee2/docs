@@ -1,0 +1,204 @@
+---
+title: "Transactions API: List, Send, and Receive"
+sidebarTitle: "Transactions"
+description: "Use the Transactions API to retrieve your full transaction history with filters, fetch individual records, and send money to other Ocean Wallet users."
+---
+
+The Transactions API lets you query your full payment history, inspect individual transactions, and initiate new money transfers to other Ocean Wallet users. You can filter the transaction list by type, status, or date range to build dashboards, generate reports, or power activity feeds in your application. All requests must include your API key in the `Authorization` header.
+
+---
+
+## GET /transactions
+
+Retrieve a paginated list of transactions on your wallet. Apply query parameters to narrow results by type, status, or date range.
+
+<ParamField query="limit" type="integer">
+  The maximum number of transactions to return per page. Defaults to `20`. Maximum value is `100`.
+</ParamField>
+
+<ParamField query="offset" type="integer">
+  The number of transactions to skip before returning results. Use with `limit` for pagination. Defaults to `0`.
+</ParamField>
+
+<ParamField query="type" type="string">
+  Filter by transaction type. Accepted values: `send`, `receive`, `deposit`, `withdrawal`.
+</ParamField>
+
+<ParamField query="status" type="string">
+  Filter by transaction status. Accepted values: `pending`, `completed`, `failed`, `refunded`.
+</ParamField>
+
+<ParamField query="from" type="string">
+  Return only transactions created on or after this ISO 8601 datetime (e.g. `2024-01-01T00:00:00Z`).
+</ParamField>
+
+<ParamField query="to" type="string">
+  Return only transactions created on or before this ISO 8601 datetime (e.g. `2024-03-31T23:59:59Z`).
+</ParamField>
+
+```bash cURL
+curl 'https://api.oceanwallet.com/v1/transactions?limit=10&type=send' \
+  -H "Authorization: Bearer ocn_live_yourapikey"
+```
+
+**Response `200 OK`**
+
+```json
+{
+  "data": [
+    {
+      "id": "txn_xyz789",
+      "type": "send",
+      "amount": 50.00,
+      "currency": "USD",
+      "status": "completed",
+      "recipient": "friend@example.com",
+      "note": "Dinner",
+      "created_at": "2024-03-01T14:22:00Z"
+    }
+  ],
+  "total": 47,
+  "limit": 10,
+  "offset": 0
+}
+```
+
+<ResponseField name="data" type="array">
+  An array of transaction objects matching your query filters. Each object contains the fields described in `GET /transactions/{id}` below.
+</ResponseField>
+
+<ResponseField name="total" type="integer">
+  The total number of transactions matching your filters, regardless of pagination. Use this with `limit` and `offset` to calculate page counts.
+</ResponseField>
+
+<ResponseField name="limit" type="integer">
+  The `limit` value applied to this response.
+</ResponseField>
+
+<ResponseField name="offset" type="integer">
+  The `offset` value applied to this response.
+</ResponseField>
+
+---
+
+## GET /transactions/\{id\}
+
+Retrieve the full details of a single transaction by its unique ID.
+
+<ParamField path="id" type="string" required>
+  The unique transaction ID (e.g. `txn_xyz789`).
+</ParamField>
+
+```bash cURL
+curl https://api.oceanwallet.com/v1/transactions/txn_xyz789 \
+  -H "Authorization: Bearer ocn_live_yourapikey"
+```
+
+**Response `200 OK`**
+
+```json
+{
+  "id": "txn_xyz789",
+  "type": "send",
+  "amount": 50.00,
+  "currency": "USD",
+  "status": "completed",
+  "recipient": "friend@example.com",
+  "note": "Dinner",
+  "fee": 0.25,
+  "created_at": "2024-03-01T14:22:00Z",
+  "completed_at": "2024-03-01T14:22:35Z"
+}
+```
+
+<ResponseField name="id" type="string">
+  The unique identifier for this transaction.
+</ResponseField>
+
+<ResponseField name="type" type="string">
+  The transaction type: `send`, `receive`, `deposit`, or `withdrawal`.
+</ResponseField>
+
+<ResponseField name="amount" type="number">
+  The transaction amount in USD.
+</ResponseField>
+
+<ResponseField name="currency" type="string">
+  The transaction currency. Currently always `USD`.
+</ResponseField>
+
+<ResponseField name="status" type="string">
+  The current status: `pending`, `completed`, `failed`, or `refunded`.
+</ResponseField>
+
+<ResponseField name="recipient" type="string">
+  The email address or wallet ID of the recipient. Present on `send` transactions.
+</ResponseField>
+
+<ResponseField name="note" type="string">
+  The optional memo attached to the transaction at the time it was created.
+</ResponseField>
+
+<ResponseField name="fee" type="number">
+  The processing fee charged for this transaction, in USD.
+</ResponseField>
+
+<ResponseField name="created_at" type="string">
+  ISO 8601 timestamp for when the transaction was initiated.
+</ResponseField>
+
+<ResponseField name="completed_at" type="string">
+  ISO 8601 timestamp for when the transaction reached a terminal state (`completed`, `failed`, or `refunded`). `null` if still pending.
+</ResponseField>
+
+---
+
+## POST /transactions/send
+
+Send money from your wallet to another Ocean Wallet user by email address or wallet ID.
+
+<ParamField body="recipient" type="string" required>
+  The email address or wallet ID of the person you want to send money to (e.g. `friend@example.com` or `ocn_wlt_abc123xyz`).
+</ParamField>
+
+<ParamField body="amount" type="number" required>
+  The amount to send, in USD. Must be greater than `0` and must not exceed your available balance.
+</ParamField>
+
+<ParamField body="note" type="string">
+  An optional memo visible to both the sender and recipient. Maximum 140 characters.
+</ParamField>
+
+```bash cURL
+curl -X POST https://api.oceanwallet.com/v1/transactions/send \
+  -H "Authorization: Bearer ocn_live_yourapikey" \
+  -H "Content-Type: application/json" \
+  -d '{"recipient": "friend@example.com", "amount": 25.00, "note": "Coffee"}'
+```
+
+**Response `201 Created`**
+
+```json
+{
+  "id": "txn_newabc123",
+  "type": "send",
+  "amount": 25.00,
+  "currency": "USD",
+  "status": "completed",
+  "recipient": "friend@example.com",
+  "note": "Coffee",
+  "fee": 0.00,
+  "created_at": "2024-03-05T09:15:00Z",
+  "completed_at": "2024-03-05T09:15:02Z"
+}
+```
+
+The response contains the full transaction object for the newly created send, including its assigned `id` and initial `status`.
+
+<Warning>
+  Sends are **irreversible** once the transaction reaches `completed` status. Always confirm the recipient address and amount before submitting the request. Ocean Wallet cannot recover funds sent to an incorrect recipient.
+</Warning>
+
+<Note>
+  If the recipient's account does not exist, the API returns a `422 Unprocessable Entity` error. Verify the email or wallet ID before retrying.
+</Note>

@@ -1,0 +1,79 @@
+---
+title: "Create and Share Payment Links"
+sidebarTitle: "Payment Links"
+description: "Generate shareable payment links to collect money from customers or contacts — no Ocean Wallet account required on the payer's side."
+---
+
+Payment links give you a fast, flexible way to request money from anyone. You share a URL, your payer clicks it, and they can complete a payment using a card or bank transfer — they don't need an Ocean Wallet account to pay. This makes payment links ideal for freelancers, small businesses, event organizers, or anyone who needs to collect funds from people outside the Ocean Wallet ecosystem.
+
+## Creating a Payment Link
+
+<Steps>
+  <Step title="Navigate to Payment Links">
+    From the main dashboard, go to **Payments > Payment Links**.
+  </Step>
+  <Step title="Click New Payment Link">
+    Click the **New Payment Link** button in the top-right corner of the Payment Links screen.
+  </Step>
+  <Step title="Set the payment amount">
+    Enter a **fixed amount** that the payer must pay, or toggle **Let payer choose amount** to allow them to enter any value. Fixed amounts are useful for specific invoices or products; open amounts work well for tips or donations.
+  </Step>
+  <Step title="Add a title and description">
+    Give your link a clear **title** (for example, "Logo Design — Invoice #42") and an optional **description**. Both fields are displayed to the payer on the payment page, so keep them descriptive and professional.
+  </Step>
+  <Step title="Set an optional expiry date">
+    Toggle **Set Expiry** and choose a date if you want the link to stop accepting payments automatically after a certain point. Leave this blank for a link that never expires.
+  </Step>
+  <Step title="Generate and share the link">
+    Click **Generate Link**. Your new payment link is created immediately. Click **Copy Link** to copy it to your clipboard, then share it however you like.
+  </Step>
+</Steps>
+
+## Sharing Your Link
+
+Payment links are plain URLs that work anywhere — you can paste them into an email, drop them in an SMS, post them on social media, or embed them on a webpage. 
+
+To add a simple payment button to a webpage, use a standard anchor tag with your link:
+
+```html
+<a href="https://pay.oceanwallet.com/l/abc123" target="_blank">Pay Now</a>
+```
+
+Replace `abc123` with your actual link ID, which is shown on the Payment Links detail page. Style the button however you like using your site's existing CSS — no additional scripts or embeds are required.
+
+## Tracking Payments
+
+Every payment link has its own activity feed. To see who has paid and how much you've collected:
+
+1. Go to **Payments > Payment Links**.
+2. Click on any link in the list to open its detail view.
+
+Each link's detail page shows:
+
+- **Total collected** — the cumulative amount received through the link
+- **Number of payments** — how many individual payments have been made
+- **Payer details** — name, email, amount, and timestamp for each payment
+
+All funds collected through a payment link are deposited into your Ocean Wallet balance automatically.
+
+## Managing Links
+
+<Accordion title="How do I deactivate a payment link?">
+  Open **Payments > Payment Links**, find the link you want to stop, and click **Deactivate**. The link is disabled immediately. Anyone who visits the URL after deactivation will see an error page stating that the link is no longer active.
+
+  You can reactivate a deactivated link at any time from the same screen by clicking **Reactivate**.
+</Accordion>
+
+<Accordion title="Can I edit a link after it's been created?">
+  The amount and expiry date on an existing link cannot be edited after creation. If you need to change these details, deactivate the old link and create a new one with the updated settings.
+</Accordion>
+
+<Accordion title="What happens when a link expires?">
+  Once a link's expiry date passes, it behaves exactly like a deactivated link — payers see an error page and cannot complete a payment. All payments collected before the expiry date remain in your balance and are still visible in the link's activity feed.
+</Accordion>
+
+---
+
+<Tip>
+  If you need to create or manage payment links programmatically — for example, to generate a unique link per order in your application — the Ocean Wallet API has you covered. See the [Payments API reference](/api/payments) for full details on creating, listing, and deactivating links via code.
+</Tip>

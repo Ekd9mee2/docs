@@ -1,0 +1,72 @@
+---
+title: "How Ocean Wallet Works: Core Concepts"
+sidebarTitle: "Wallet Overview"
+description: "Understand the building blocks of Ocean Wallet — your balance, wallet ID, funding sources, and contacts — all managed from a single account."
+---
+
+Ocean Wallet is a digital wallet that lets you hold a balance, send and receive money, and manage payments entirely from one account. Whether you're paying a friend, collecting funds through a payment link, or moving money to your bank, everything flows through your wallet — accessible from any device, at any time.
+
+## Your Wallet
+
+Each Ocean Wallet account comes with a single primary wallet that serves as the hub for all your financial activity. Your wallet holds a balance in USD, tracks every transaction you make, and connects to the funding sources you use to move money in and out.
+
+<CardGroup cols={2}>
+  <Card title="One Primary Wallet" icon="wallet">
+    Your account maps to exactly one primary wallet. All balances, transactions, and payment activity live here.
+  </Card>
+  <Card title="Accessible Anywhere" icon="globe">
+    Manage your wallet from the web dashboard, a mobile device, or directly through the Ocean Wallet API.
+  </Card>
+</CardGroup>
+
+<Note>
+  Ocean Wallet balances are held in USD. International currencies are not currently supported.
+</Note>
+
+## Wallet ID
+
+Your wallet ID is a unique identifier assigned to your account when you sign up. It looks like this:
+
+```
+ocn_wlt_abc123xyz
+```
+
+Share your wallet ID with anyone who needs to send you money. Alternatively, you can share the email address registered to your Ocean Wallet account — both route payments directly to your wallet.
+
+<Tip>
+  Find your wallet ID at any time by navigating to **Account Settings → Wallet Details** in the dashboard.
+</Tip>
+
+## Funding Sources
+
+Funding sources are the external bank accounts or debit and credit cards you connect to Ocean Wallet. They act as the on-ramp and off-ramp for your wallet balance.
+
+- **Deposits** — Pull funds from a connected bank account or card into your wallet balance.
+- **Withdrawals** — Push funds from your wallet balance back out to a connected bank account.
+
+<Info>
+  Funds must clear from your funding source before they appear in your available balance. See [Balances & Transactions](/concepts/balances-and-transactions) for settlement timelines.
+</Info>
+
+<Steps>
+  <Step title="Open Funding Sources">
+    In the dashboard, go to **Settings → Funding Sources**.
+  </Step>
+  <Step title="Add a Source">
+    Select **Add Bank Account** or **Add Card**, then follow the verification prompts.
+  </Step>
+  <Step title="Set a Default">
+    Mark one source as your default to speed up future deposits and withdrawals.
+  </Step>
+</Steps>
+
+## Contacts
+
+Contacts let you save frequent recipients so you don't have to look up a wallet ID or email address every time you send money. A contact stores a display name alongside their wallet ID or registered email.
+
+<Accordion title="How to add a contact">
+  1. Navigate to **Contacts** in the dashboard sidebar.
+  2. Select **New Contact**.
+  3. Enter the recipient's name and their wallet ID or Ocean Wallet email address.
+  4. Save the contact — they'll appear in your recipient list the next time you initiate a send.
+</Accordion>

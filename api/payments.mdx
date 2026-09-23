@@ -1,0 +1,154 @@
+---
+title: "Payments API: Create and Manage Payment Links"
+sidebarTitle: "Payments"
+description: "Use the Payments API to create shareable payment links, list and inspect existing links, and deactivate links you no longer want to accept payments through."
+---
+
+The Payments API lets you generate shareable payment links that anyone can use to send money directly to your Ocean Wallet — no account required on the payer's side. You can set a fixed amount or leave the link open for the payer to specify, attach expiry dates, and deactivate links at any time. Payment links are ideal for invoices, checkout flows, and fundraising pages.
+
+---
+
+## POST /payments/links
+
+Create a new payment link. Once created, share the returned `url` with anyone you want to collect funds from.
+
+<ParamField body="title" type="string" required>
+  The label displayed to the payer on the payment page. Keep this clear and recognizable (e.g. `Invoice #42` or `Event Ticket`). Maximum 80 characters.
+</ParamField>
+
+<ParamField body="amount" type="number">
+  The fixed amount in USD that the payer must pay. Omit this field to create an open-amount link that lets the payer enter any value.
+</ParamField>
+
+<ParamField body="description" type="string">
+  An optional longer description shown to the payer below the title. Maximum 255 characters.
+</ParamField>
+
+<ParamField body="expires_at" type="string">
+  An optional ISO 8601 datetime after which the link automatically transitions to `expired` and can no longer be paid (e.g. `2024-12-31T23:59:59Z`). Omit to create a link with no expiry.
+</ParamField>
+
+```bash cURL
+curl -X POST https://api.oceanwallet.com/v1/payments/links \
+  -H "Authorization: Bearer ocn_live_yourapikey" \
+  -H "Content-Type: application/json" \
+  -d '{"title": "Invoice #42", "amount": 150.00}'
+```
+
+**Response `201 Created`**
+
+```json
+{
+  "id": "lnk_def456",
+  "url": "https://pay.oceanwallet.com/l/def456",
+  "title": "Invoice #42",
+  "amount": 150.00,
+  "currency": "USD",
+  "status": "active",
+  "total_collected": 0,
+  "created_at": "2024-03-10T09:00:00Z",
+  "expires_at": null
+}
+```
+
+<ResponseField name="id" type="string">
+  The unique identifier for this payment link. Use it to retrieve, list, or deactivate the link later.
+</ResponseField>
+
+<ResponseField name="url" type="string">
+  The fully-qualified, shareable URL for this payment link (e.g. `https://pay.oceanwallet.com/l/def456`). Send this to your customers or embed it in your application.
+</ResponseField>
+
+<ResponseField name="status" type="string">
+  The current state of the link: `active` (accepting payments), `inactive` (manually deactivated), or `expired` (past its `expires_at` datetime).
+</ResponseField>
+
+<ResponseField name="total_collected" type="number">
+  The cumulative USD amount collected through this link across all payments. Useful for tracking progress toward a fundraising goal or verifying invoice settlement.
+</ResponseField>
+
+<ResponseField name="expires_at" type="string">
+  The ISO 8601 datetime at which this link expires, or `null` if no expiry was set.
+</ResponseField>
+
+<Tip>
+  Omitting `amount` is useful for donation pages or tip jars where you want the payer to choose their own amount. For invoices, always set a fixed `amount` to avoid underpayment.
+</Tip>
+
+---
+
+## GET /payments/links
+
+Retrieve a paginated list of all payment links on your account. Filter by status to focus on active, inactive, or expired links.
+
+<ParamField query="status" type="string">
+  Filter results by link status. Accepted values: `active`, `inactive`, `expired`.
+</ParamField>
+
+```bash cURL
+curl 'https://api.oceanwallet.com/v1/payments/links?status=active' \
+  -H "Authorization: Bearer ocn_live_yourapikey"
+```
+
+**Response `200 OK`**
+
+```json
+{
+  "data": [
+    {
+      "id": "lnk_def456",
+      "url": "https://pay.oceanwallet.com/l/def456",
+      "title": "Invoice #42",
+      "amount": 150.00,
+      "currency": "USD",
+      "status": "active",
+      "total_collected": 0,
+      "created_at": "2024-03-10T09:00:00Z",
+      "expires_at": null
+    }
+  ],
+  "total": 1,
+  "limit": 20,
+  "offset": 0
+}
+```
+
+---
+
+## GET /payments/links/\{id\}
+
+Retrieve the full details of a single payment link by its ID.
+
+<ParamField path="id" type="string" required>
+  The unique payment link ID (e.g. `lnk_def456`).
+</ParamField>
+
+```bash cURL
+curl https://api.oceanwallet.com/v1/payments/links/lnk_def456 \
+  -H "Authorization: Bearer ocn_live_yourapikey"
+```
+
+The response returns the full payment link object, identical in shape to the `POST /payments/links` response above.
+
+---
+
+## DELETE /payments/links/\{id\}
+
+Deactivate a payment link so it can no longer be used to collect payments. This action sets the link's `status` to `inactive`.
+
+<ParamField path="id" type="string" required>
+  The unique payment link ID to deactivate (e.g. `lnk_def456`).
+</ParamField>
+
+```bash cURL
+curl -X DELETE https://api.oceanwallet.com/v1/payments/links/lnk_def456 \
+  -H "Authorization: Bearer ocn_live_yourapikey"
+```
+
+**Response `204 No Content`**
+
+A successful deactivation returns an empty body with status `204`. The link's `status` transitions to `inactive` and can no longer be paid, but the record and its `total_collected` history are preserved.
+
+<Note>
+  Deactivation is distinct from deletion — the link record is retained for your records. If you need to reactivate a link, contact Ocean Wallet support.
+</Note>

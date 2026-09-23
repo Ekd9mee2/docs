@@ -1,0 +1,55 @@
+---
+title: "Ocean Wallet REST API Reference"
+sidebarTitle: "Overview"
+description: "Explore the Ocean Wallet REST API — base URL, versioning, request format, authentication, rate limits, and official SDKs to get started quickly."
+---
+
+The Ocean Wallet REST API gives you programmatic access to wallets, transactions, payment links, and more. Every feature available in the Ocean Wallet dashboard is also available through the API, so you can build fully custom integrations, automate financial workflows, and embed wallet functionality directly into your product.
+
+## Base URL
+
+All API requests are made to the following base URL. There are no environment-specific subdomains — use [test keys](/api/authentication#test-vs-live-keys) during development to work against the sandbox without touching real funds.
+
+```
+https://api.oceanwallet.com/v1
+```
+
+<Tip>
+  Generate your API key in the [Ocean Wallet dashboard](https://app.oceanwallet.com) before making your first request. Head to **Settings → API Keys** to get started.
+</Tip>
+
+## Versioning
+
+The current API version is `v1`. You must include the version segment in every request URL (e.g. `/v1/wallets`). Ocean Wallet will announce breaking changes ahead of time and introduce them under a new version path (e.g. `/v2/...`), so your existing integration will continue to work without modification until you choose to migrate.
+
+## Request Format
+
+All request bodies must be sent as JSON. Set the `Content-Type` header to `application/json` on every request that includes a body. All responses — including errors — are also returned as JSON.
+
+```http
+Content-Type: application/json
+```
+
+## Authentication
+
+Every endpoint requires a valid API key passed in the `Authorization` header as a Bearer token. Requests made without a key, or with an invalid key, will receive a `401 Unauthorized` response. See the [Authentication](/api/authentication) page for full details on generating keys, scopes, and test vs. live environments.
+
+## Rate Limits
+
+Each API key is allowed **100 requests per minute**. If you exceed this limit, the API returns an `HTTP 429 Too Many Requests` response. To handle this gracefully, implement exponential backoff in your retry logic — wait a short interval after the first failure, then double the wait time on each subsequent retry until the request succeeds.
+
+## SDKs & Libraries
+
+Official SDKs are available for **JavaScript/TypeScript** and **Python**. The SDKs handle authentication, request serialization, and error parsing so you can focus on building.
+
+<CodeGroup>
+
+```bash npm
+npm install @oceanwallet/sdk
+```
+
+```bash pip
+pip install oceanwallet
+```
+
+</CodeGroup>

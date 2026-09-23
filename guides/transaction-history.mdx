@@ -1,0 +1,80 @@
+---
+title: "View and Export Your Transaction History"
+sidebarTitle: "Transaction History"
+description: "Browse, filter, and search all your Ocean Wallet transactions, then export statements as CSV or PDF for records and accounting."
+---
+
+Ocean Wallet keeps a complete, permanent record of every transaction on your account — sends, receives, deposits, withdrawals, and payment link collections. Your transaction history is always available from the dashboard, and you can filter, search, and export it at any time for personal records or accounting purposes.
+
+## Viewing Transactions
+
+To see your full transaction history, click **Transactions** in the main dashboard navigation. The list loads with your most recent transactions at the top and scrolls back through your full account history.
+
+Each row in the transaction list shows:
+
+| Column | Description |
+|---|---|
+| **Date** | The date and time the transaction was processed |
+| **Type** | Send, Receive, Deposit, Withdrawal, or Payment Link |
+| **Amount** | The transaction value in USD (positive for money in, negative for money out) |
+| **Status** | Completed, Pending, or Failed |
+| **Counterparty** | The recipient, sender, bank account, or payment link involved |
+
+## Filtering and Searching
+
+Use the **Filters** bar at the top of the Transactions view to narrow your results:
+
+- **Date range** — Set a start and end date to view transactions within a specific period (for example, a calendar month for reconciliation).
+- **Transaction type** — Filter by Send, Receive, Deposit, Withdrawal, or Payment Link to focus on one category at a time.
+- **Status** — Filter by Completed, Pending, or Failed to quickly spot transactions that may need attention.
+
+Use the **Search** box to find a specific transaction by:
+- Amount (for example, `49.99`)
+- Memo or note text
+- Recipient or sender name
+
+You can combine filters and search together — for example, filter by **Receive** and search for a contact's name to see everything they've ever sent you.
+
+<Tip>
+  To review all failed transactions at a glance, set the **Status** filter to **Failed**. Failed deposits and withdrawals can often be retried directly from their detail view.
+</Tip>
+
+## Transaction Details
+
+Click any row in the transaction list to open the full detail view for that transaction. The detail panel shows:
+
+- **Transaction ID** — A unique reference number you can quote when contacting support
+- **Timestamp** — The exact date and time the transaction was processed, in your local timezone
+- **Amount** — The gross transaction value
+- **Fee** — Any processing fee applied (for example, card deposit fees)
+- **Net amount** — The amount credited or debited after fees
+- **Status** — Current status with a short explanation if the transaction is pending or failed
+- **Recipient / Sender** — The counterparty's name, email, or bank account details
+- **Notes** — Any memo text attached to the transaction
+
+<Note>
+  If a transaction shows a **Failed** status, the detail view will include a short reason (for example, "Insufficient funds" or "Bank transfer declined") and, where applicable, a **Retry** button.
+</Note>
+
+## Exporting Statements
+
+<Steps>
+  <Step title="Click Export in the Transactions view">
+    Open **Transactions** in the dashboard, then click the **Export** button in the top-right corner of the page.
+  </Step>
+  <Step title="Choose a date range">
+    Select a start date and end date for your export. The export includes all transactions (regardless of any filters currently applied) within that range.
+  </Step>
+  <Step title="Select a file format">
+    Choose **CSV** or **PDF**:
+    - **CSV** is ideal for importing into accounting software such as QuickBooks, Xero, or Excel.
+    - **PDF** is formatted as a clean bank-style statement, suitable for record-keeping or sharing with an accountant.
+  </Step>
+  <Step title="Download the file">
+    Click **Download**. The file is generated instantly and saved to your device. Large date ranges (over 12 months) may take a few seconds to prepare.
+  </Step>
+</Steps>
+
+<Tip>
+  Need transaction data in your own application or data pipeline? Use the `GET /transactions` API endpoint to retrieve transactions programmatically with full filtering support. See the [Transactions API reference](/api/transactions) for request parameters, pagination, and response schemas.
+</Tip>

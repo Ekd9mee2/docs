@@ -1,0 +1,104 @@
+---
+title: "Troubleshoot Common Ocean Wallet Issues"
+sidebarTitle: "Troubleshooting"
+description: "Diagnose and resolve common Ocean Wallet problems including login failures, stuck transactions, missing deposits, and API authentication or webhook errors."
+---
+
+Most Ocean Wallet issues can be resolved quickly with a few targeted checks. Work through the relevant section below to identify and fix your problem. If you're still stuck after following these steps, our support team is ready to help.
+
+## Login Issues
+
+<AccordionGroup>
+  <Accordion title="I can't log in">
+    Start with the most common causes:
+
+    1. **Double-check your email and password.** Make sure Caps Lock is off and that you're using the email address you registered with.
+    2. **Reset your password.** On the login screen, click **Forgot password?** and follow the link sent to your email. Check your spam or junk folder if the email doesn't arrive within a few minutes.
+    3. **Confirm your email is verified.** If you registered recently and haven't clicked the verification link in your welcome email, your account may not be active yet. Check your inbox (and spam folder) for the verification email and click the link to activate your account.
+    4. **Clear your browser cache and cookies**, then try logging in again. Alternatively, try a different browser or device.
+
+    If none of these steps work, contact **support@oceanwallet.com** with your account email address.
+  </Accordion>
+
+  <Accordion title="I'm not receiving the 2FA code">
+    **For email-based 2FA codes:**
+    - Check your spam or junk mail folder.
+    - Make sure your registered email address is correct in **Settings → Profile**.
+
+    **For SMS-based 2FA codes:**
+    - Confirm your phone has a cellular signal or data connection.
+    - Verify that the mobile number listed in **Settings → Security → Two-Factor Authentication** is correct.
+    - Wait up to 60 seconds — SMS delivery can occasionally be delayed.
+
+    **If you still can't receive the code:**
+    - Use one of the backup codes you saved when you set up 2FA. On the 2FA prompt screen, click **Use a backup code**.
+    - If you don't have backup codes, contact **support@oceanwallet.com** for account recovery assistance.
+  </Accordion>
+</AccordionGroup>
+
+## Payment Issues
+
+<AccordionGroup>
+  <Accordion title="My payment is stuck in pending">
+    Outgoing payments to other Ocean Wallet users typically process within a few minutes. If your transaction has been in **Pending** status for more than **1 hour**, contact **support@oceanwallet.com** with the transaction ID shown in your transaction history. Include your account email and we'll investigate and resolve the hold as quickly as possible.
+  </Accordion>
+
+  <Accordion title="I sent to the wrong person">
+    Wallet-to-wallet transfers on Ocean Wallet are processed instantly and **cannot be automatically reversed**. Take these steps immediately:
+
+    1. Copy the **transaction ID** from your transaction history.
+    2. Email **support@oceanwallet.com** with your account email, the transaction ID, and a brief description of what happened.
+
+    Our team will contact the recipient on your behalf to request a voluntary refund. We cannot guarantee recovery of the funds, so always verify the recipient's name and email address carefully before confirming any send.
+  </Accordion>
+
+  <Accordion title="My deposit hasn't arrived">
+    Deposit timing depends on the transfer method:
+
+    - **Bank transfer (ACH):** Takes **1–3 business days** to settle after your bank processes the debit.
+    - **Ocean Wallet to Ocean Wallet:** Should arrive instantly.
+
+    Before contacting support, check your bank statement or online banking portal to confirm that the debit has actually left your bank account. If the debit appears on your bank statement but the funds haven't arrived in your Ocean Wallet after 3 business days, contact **support@oceanwallet.com** with the transaction ID or bank reference number.
+  </Accordion>
+</AccordionGroup>
+
+## API Issues
+
+<AccordionGroup>
+  <Accordion title="I'm getting 401 Unauthorized">
+    A `401 Unauthorized` response means the API cannot verify your identity. Check the following:
+
+    1. **Confirm the `Authorization` header format.** The correct format is:
+       ```
+       Authorization: Bearer <your_api_key>
+       ```
+       Make sure there are no extra spaces, missing characters, or encoding issues.
+    2. **Check that your API key is active.** Log in to the Ocean Wallet dashboard, go to **Developer → API Keys**, and confirm the key you're using hasn't been revoked or expired.
+    3. **Regenerate the key if needed.** If you've accidentally exposed the key, revoke it and create a new one, then update your integration with the new key.
+  </Accordion>
+
+  <Accordion title="I'm getting 429 Too Many Requests">
+    A `429 Too Many Requests` response means your integration has exceeded the API rate limit of **100 requests per minute** per API key.
+
+    To resolve this:
+
+    1. **Implement exponential backoff.** When you receive a `429`, wait before retrying. Start with a 1-second delay and double it on each subsequent retry (e.g., 1 s, 2 s, 4 s, 8 s) up to a reasonable maximum.
+    2. **Respect the `Retry-After` header.** Ocean Wallet includes a `Retry-After` header in `429` responses indicating how many seconds to wait before the next request.
+    3. **Reduce request frequency.** Review your integration for unnecessary or duplicate API calls, and consider caching responses where appropriate.
+
+    If your use case legitimately requires a higher rate limit, contact **support@oceanwallet.com** to discuss an elevated limit for your account.
+  </Accordion>
+
+  <Accordion title="Webhook not firing">
+    If Ocean Wallet events aren't reaching your endpoint, work through these checks:
+
+    1. **Verify the endpoint URL is publicly reachable.** Your webhook URL must be accessible from the internet — `localhost` or internal network URLs will not work in production. Use a tool like [webhook.site](https://webhook.site) to test reachability.
+    2. **Check your webhook secret.** If you've configured a webhook secret in the dashboard, make sure your server is validating the `X-Ocean-Signature` header correctly. A signature mismatch causes the delivery to fail silently on your end.
+    3. **Review delivery logs.** In the Ocean Wallet dashboard, go to **Developer → Webhooks** and open your webhook configuration. The **Delivery Logs** tab shows every attempted delivery, the HTTP status code your server returned, and the full request payload — use this to pinpoint exactly where the failure is occurring.
+    4. **Check your server logs.** Confirm that your endpoint is returning a `2xx` status code promptly. If your server takes too long to respond, Ocean Wallet will mark the delivery as failed.
+  </Accordion>
+</AccordionGroup>
+
+<Tip>
+  For any issue you can't resolve with the steps above, email **support@oceanwallet.com** with your **account email address** and the relevant **transaction ID** (or API request ID). The more detail you include, the faster our team can diagnose and resolve your issue.
+</Tip>

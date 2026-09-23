@@ -1,17 +1,11 @@
 {
-  "$schema": "https://mintlify.com/docs.json",
+  "projectType": "saas",
+  "projectName": "Ocean Wallet",
+  "projectDescription": "Ocean Wallet is a digital wallet platform that lets users store, send, receive, and manage funds securely from any device.",
   "theme": "almond",
-  "name": "Ocean Wallet",
-  "colors": {
-    "primary": "#1be49c",
-    "light": "#0c8c5c",
-    "dark": "#0c0c0c"
-  },
-  "favicon": "https://media.brand.dev/483ee27f-08fb-4d32-842d-86b4c40f9fb4.png",
-  "logo": {
-    "light": "https://media.brand.dev/07fcb57b-76a5-49f6-abdb-740da69c791f.svg",
-    "dark": "https://media.brand.dev/07fcb57b-76a5-49f6-abdb-740da69c791f.svg"
-  },
+  "primaryColor": "#1be49c",
+  "lightColor": "#0c8c5c",
+  "darkColor": "#0c0c0c",
   "navigation": {
     "tabs": [
       {
@@ -83,22 +77,25 @@
       }
     ]
   },
-  "navbar": {
-    "links": [
-      {
-        "label": "Support",
-        "href": "mailto:support@oceanwallet.com"
-      }
-    ],
-    "primary": {
-      "type": "button",
-      "label": "Sign In",
-      "href": "https://app.oceanwallet.com"
-    }
-  },
-  "footer": {
-    "socials": {
-      "x": "https://x.com/oceanwallet"
-    }
-  }
+  "keyFeatures": [
+    "Send and receive money instantly",
+    "Deposit and withdraw funds",
+    "Payment link generation",
+    "Transaction history and statements",
+    "Two-factor authentication",
+    "Webhook notifications for payment events",
+    "REST API for programmatic wallet management"
+  ],
+  "publicApiSurface": [
+    "GET /wallets",
+    "GET /wallets/{id}/balance",
+    "POST /transactions/send",
+    "POST /transactions/receive",
+    "GET /transactions",
+    "GET /transactions/{id}",
+    "POST /payments/links",
+    "POST /webhooks",
+    "GET /webhooks",
+    "DELETE /webhooks/{id}"
+  ]
 }

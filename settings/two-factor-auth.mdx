@@ -1,0 +1,86 @@
+---
+title: "Enable Two-Factor Authentication (2FA)"
+sidebarTitle: "Two-Factor Auth"
+description: "Set up two-factor authentication using an authenticator app or SMS to add a critical second layer of protection to your Ocean Wallet account."
+---
+
+Two-factor authentication (2FA) significantly reduces the risk of unauthorized access to your account. Even if someone obtains your password, they still cannot log in without the second factor — a time-sensitive code from your phone. Ocean Wallet strongly recommends enabling 2FA for every account.
+
+## Authenticator App (Recommended)
+
+An authenticator app generates a new six-digit code every 30 seconds and works without a cellular signal or internet connection, making it the most reliable and secure 2FA method.
+
+<Steps>
+  <Step title="Open Two-Factor Authentication Settings">
+    Navigate to **Settings → Security → Two-Factor Authentication**.
+  </Step>
+  <Step title="Enable 2FA">
+    Click **Enable 2FA** to begin setup.
+  </Step>
+  <Step title="Choose Authenticator App">
+    Select **Authenticator App** as your preferred method.
+  </Step>
+  <Step title="Scan the QR Code">
+    Open your authenticator app — such as **Google Authenticator**, **Authy**, or any TOTP-compatible app — and scan the QR code displayed on screen. If you can't scan the code, tap **Enter code manually** and type the text key shown beneath the QR code.
+  </Step>
+  <Step title="Confirm with a 6-Digit Code">
+    Enter the 6-digit code currently displayed in your authenticator app to confirm that the pairing was successful.
+  </Step>
+  <Step title="Save Your Backup Codes">
+    Ocean Wallet will display a set of one-time backup codes. Copy or print these codes and store them somewhere safe before closing the dialog.
+  </Step>
+</Steps>
+
+<Warning>
+  **Your backup codes are shown only once.** Store them in a secure location — such as a password manager, a printed sheet kept offline, or an encrypted notes app. If you ever lose access to your authenticator device, you'll use one of these codes to regain entry to your account. Each backup code can only be used once.
+</Warning>
+
+## SMS Verification
+
+If you don't have access to an authenticator app, you can use SMS as your second factor. Ocean Wallet will text a verification code to your mobile number each time you log in.
+
+<Steps>
+  <Step title="Open Two-Factor Authentication Settings">
+    Navigate to **Settings → Security → Two-Factor Authentication** and click **Enable 2FA**.
+  </Step>
+  <Step title="Choose SMS">
+    Select **SMS** as your preferred method.
+  </Step>
+  <Step title="Enter Your Mobile Number">
+    Type your mobile phone number, including the country code.
+  </Step>
+  <Step title="Verify the Code">
+    Ocean Wallet will send a verification code to that number. Enter the code to complete setup.
+  </Step>
+</Steps>
+
+<Note>
+  SMS-based 2FA is less secure than an authenticator app because text messages can be intercepted through SIM-swapping attacks. Whenever possible, use an authenticator app instead.
+</Note>
+
+## Disabling 2FA
+
+<Steps>
+  <Step title="Open Two-Factor Authentication Settings">
+    Navigate to **Settings → Security → Two-Factor Authentication**.
+  </Step>
+  <Step title="Click Disable">
+    Click **Disable 2FA**.
+  </Step>
+  <Step title="Verify Your Identity">
+    Confirm the action by entering the current 2FA code from your authenticator app or SMS. This step ensures that only you — or someone with physical access to your device — can turn off 2FA.
+  </Step>
+</Steps>
+
+## Lost Your 2FA Device?
+
+If you've lost the device linked to your 2FA method, you can still recover access to your account.
+
+1. On the login screen, complete your email and password entry, then click **Use a backup code** when prompted for your 2FA code.
+2. Enter one of the backup codes you saved during setup.
+
+If you no longer have any backup codes, contact **support@oceanwallet.com**. Our support team will verify your identity using a government-issued ID before restoring access to your account.
+
+<Tip>
+  After recovering your account, immediately set up 2FA again and save a fresh set of backup codes to avoid being locked out in the future.
+</Tip>

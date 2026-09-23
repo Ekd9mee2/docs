@@ -1,0 +1,92 @@
+---
+title: "Security Features and Best Practices"
+sidebarTitle: "Security"
+description: "Discover how Ocean Wallet encrypts your data, detects fraud, and what steps you can take to keep your account and API keys secure."
+---
+
+Ocean Wallet is built with multiple layers of protection to keep your funds and personal data safe. From encryption at rest to real-time fraud monitoring, security is enforced at every level of the platform. Beyond the built-in safeguards, there are straightforward steps you can take to further protect your account.
+
+<Warning>
+  Ocean Wallet will **never** ask for your password or full API key via email, chat, or any support channel. If you receive such a request, treat it as fraudulent and report it immediately.
+</Warning>
+
+## Encryption
+
+All data exchanged between your device and Ocean Wallet is encrypted in transit using **TLS 1.2 or higher**. Data stored on Ocean Wallet's servers — including account details and transaction records — is encrypted at rest using **AES-256**.
+
+API keys and account credentials are **hashed** before storage. Ocean Wallet never retains plain-text copies of these values, so even an internal system breach cannot expose your raw credentials.
+
+## Two-Factor Authentication (2FA)
+
+Two-factor authentication adds a second verification step when you sign in, making it significantly harder for an attacker to access your account even if they obtain your password.
+
+<Steps>
+  <Step title="Open Security Settings">
+    In the dashboard, navigate to [**Settings → Security**](/settings/two-factor-auth).
+  </Step>
+  <Step title="Enable 2FA">
+    Select **Enable Two-Factor Authentication** and choose your preferred method.
+  </Step>
+  <Step title="Choose a Method">
+    Ocean Wallet supports **authenticator apps** (such as Google Authenticator or Authy) and **SMS verification**. Authenticator apps are recommended for stronger security.
+  </Step>
+  <Step title="Save Your Backup Codes">
+    Store the backup codes provided during setup in a safe place. You'll need them if you ever lose access to your authentication device.
+  </Step>
+</Steps>
+
+<Tip>
+  Use an authenticator app rather than SMS where possible. SMS codes can be intercepted through SIM-swapping attacks, while authenticator app codes are generated locally on your device.
+</Tip>
+
+## API Key Security
+
+Your API keys grant full programmatic access to your wallet, including the ability to initiate transfers and retrieve sensitive account data. Treat them with the same care as a password.
+
+<CardGroup cols={2}>
+  <Card title="Never Share Keys" icon="eye-slash">
+    Do not share your API keys with anyone. Ocean Wallet support will never ask for them.
+  </Card>
+  <Card title="Keep Out of Source Control" icon="code-branch">
+    Never commit API keys to a Git repository. Use environment variables or a secrets manager instead.
+  </Card>
+  <Card title="Rotate Regularly" icon="arrows-rotate">
+    Generate new API keys on a regular schedule to limit the exposure window of any single key.
+  </Card>
+  <Card title="Revoke Compromised Keys" icon="ban">
+    If a key is exposed, revoke it immediately in the dashboard under **Settings → API Keys**, then issue a replacement.
+  </Card>
+</CardGroup>
+
+<Warning>
+  Revoking a key is immediate and irreversible. Any integration using the revoked key will stop working instantly — make sure you have a replacement ready before revoking a key used in production.
+</Warning>
+
+## Fraud Detection
+
+Ocean Wallet continuously monitors transactions for patterns that indicate unusual or unauthorized activity. Large transfers, logins from new locations, and other anomalies are automatically flagged for review.
+
+When a transaction is flagged, Ocean Wallet may:
+
+- **Pause the transaction** and request additional verification before it proceeds.
+- **Send an email alert** to your registered address describing the flagged activity.
+- **Temporarily restrict** outbound transactions until you confirm your identity.
+
+<Info>
+  If you receive a fraud alert for activity you initiated, confirm the transaction through the verification link in the alert email or contact support to lift any temporary restrictions.
+</Info>
+
+## Session Management
+
+Active dashboard sessions expire automatically after **30 minutes of inactivity** to reduce the risk of unauthorized access on shared or unattended devices.
+
+<Accordion title="View and revoke active sessions">
+  1. Navigate to [**Settings → Security**](/settings/two-factor-auth) in the dashboard.
+  2. Scroll to the **Active Sessions** section.
+  3. Review the list of sessions — each entry shows the device type, browser, approximate location, and last activity time.
+  4. Select **Revoke** next to any session you don't recognize or no longer need. Revoking a session signs that device out immediately.
+</Accordion>
+
+<Tip>
+  If you ever suspect your account has been accessed without your knowledge, revoke all active sessions, change your password, and contact Ocean Wallet support right away.
+</Tip>

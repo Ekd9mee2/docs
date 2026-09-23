@@ -1,47 +1,56 @@
 ---
-title: "Quickstart"
-description: "Begin with a guide on the fastest path to a successful outcome"
+title: "Get Started with Ocean Wallet in Minutes"
+sidebarTitle: "Quickstart"
+description: "Create your Ocean Wallet account, verify your identity, add funds, and send your first payment — all in under ten minutes."
 ---
 
-Describe how someone begins using your product. What is the first thing they need to do? Are there any prerequisites?
-
-A quickstart should take someone from zero to using your product. They'll get a quick win and a sense of what they can accomplish.
+This guide walks you through everything you need to go from a brand-new account to completing your first payment. By the end, you'll have a funded wallet and a clear picture of how Ocean Wallet works day-to-day.
 
 ## Prerequisites
 
-Before you begin, you must have:
+Before you begin, make sure you have the following:
 
-- Requirement one (for example, Node.js 18+, a free account, an API key)
-- Requirement two (for example, a compatible device, a compatible browser, a compatible operating system)
+- A **free Ocean Wallet account** — you'll create one in Step 1 below.
+- A **verified email address** that you have access to right now, since Ocean Wallet sends a confirmation link before you can log in.
 
-## Get started
+## Set Up and Send Your First Payment
 
 <Steps>
-  <Step title="Install">
-    Describe how to install your product or sign up.
+  <Step title="Create Your Account">
+    Navigate to [app.oceanwallet.com](https://app.oceanwallet.com) and click **Sign Up**. Enter your full name, email address, and a strong password, then click **Create Account**.
 
-    ```bash
-    npm install your-package
-    ```
+    Ocean Wallet will immediately send a verification email to the address you provided. Open that email and click **Verify My Email** to activate your account. You'll be redirected back to the app and logged in automatically.
   </Step>
-  <Step title="Configure">
-    Describe any setup or configuration needed before first use.
+  <Step title="Complete Identity Verification">
+    To unlock sending funds and withdrawals, you need to verify your identity. From your dashboard, click **Verify Identity** and follow the prompts to upload a government-issued ID — a passport or driver's license both work.
 
-    ```bash
-    your-cli init
-    ```
+    <Info>
+      Basic features such as receiving funds and viewing your balance are available immediately without verification. Full sending and withdrawal capabilities are unlocked once your ID is approved.
+    </Info>
+
+    Most submissions are reviewed and approved within minutes. You'll receive an email confirmation as soon as the review is complete.
   </Step>
-  <Step title="Run it">
-    Show the first thing a user does to see it working.
+  <Step title="Fund Your Wallet">
+    With your account verified, you're ready to add money. Click **Add Funds** on your dashboard, then choose one of the available deposit methods:
 
-    ```bash
-    your-cli start
-    ```
+    - **Bank transfer** — link your bank account and initiate an ACH transfer.
+    - **Debit or credit card** — enter your card details for an instant deposit.
+
+    The minimum deposit amount is **$10**. Your balance will update as soon as the funds clear — instantly for card deposits, and within one business day for bank transfers.
+  </Step>
+  <Step title="Send Your First Payment">
+    Click **Send** on your dashboard to open the payment screen. Fill in the following fields:
+
+    | Field | What to enter |
+    |---|---|
+    | **Recipient** | The recipient's email address or Ocean Wallet ID |
+    | **Amount** | The amount you want to send (in USD) |
+    | **Note** *(optional)* | A short message to accompany the payment |
+
+    Review the payment summary, then click **Confirm & Send**. The recipient is notified instantly, and the funds appear in their wallet right away.
   </Step>
 </Steps>
 
 <Tip>
-  Give people a way to get help. This could be a link to a support page, a chat with a customer support agent, or a forum for your product.
-
-  Example: Need help? Reach out to us at [support@yourcompany.com](mailto:support@yourcompany.com).
+  If you're a developer looking to automate payments or integrate Ocean Wallet into your own application, head over to the [API Reference](/api/overview) to explore the full REST API, authentication guide, and official SDKs.
 </Tip>

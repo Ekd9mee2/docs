@@ -1,0 +1,86 @@
+---
+title: "Wallets API: Retrieve Wallet and Balance Data"
+sidebarTitle: "Wallets"
+description: "Use the Wallets API to retrieve your Ocean Wallet account details and check your current available and pending balance in real time."
+---
+
+The Wallets API gives you direct access to your Ocean Wallet account information and fund balances. Use these endpoints to display wallet details in your application, verify account status before initiating transfers, or poll current balances to keep your UI in sync. All requests require a valid API key passed as a Bearer token in the `Authorization` header.
+
+---
+
+## GET /wallets
+
+Retrieve the details associated with your authenticated wallet account, including its unique ID, registered email address, and current status.
+
+```bash cURL
+curl https://api.oceanwallet.com/v1/wallets \
+  -H "Authorization: Bearer ocn_live_yourapikey"
+```
+
+**Response `200 OK`**
+
+```json
+{
+  "id": "ocn_wlt_abc123xyz",
+  "email": "user@example.com",
+  "status": "active",
+  "created_at": "2024-01-15T10:30:00Z"
+}
+```
+
+<ResponseField name="id" type="string">
+  The unique identifier for this wallet. Use this ID when calling other endpoints that require a wallet reference.
+</ResponseField>
+
+<ResponseField name="email" type="string">
+  The email address registered to this wallet. Other Ocean Wallet users can send funds directly to this address.
+</ResponseField>
+
+<ResponseField name="status" type="string">
+  The current operational status of the wallet. Possible values are `active`, `suspended`, or `closed`. Only `active` wallets can send or receive funds.
+</ResponseField>
+
+<ResponseField name="created_at" type="string">
+  The ISO 8601 timestamp recording when this wallet account was created (e.g. `2024-01-15T10:30:00Z`).
+</ResponseField>
+
+---
+
+## GET /wallets/\{id\}/balance
+
+Retrieve the current balance for a specific wallet, broken down into available and pending amounts.
+
+<ParamField path="id" type="string" required>
+  The unique wallet ID (e.g. `ocn_wlt_abc123xyz`). You can obtain this from the `GET /wallets` response.
+</ParamField>
+
+```bash cURL
+curl https://api.oceanwallet.com/v1/wallets/ocn_wlt_abc123xyz/balance \
+  -H "Authorization: Bearer ocn_live_yourapikey"
+```
+
+**Response `200 OK`**
+
+```json
+{
+  "available": 1250.00,
+  "pending": 75.00,
+  "currency": "USD"
+}
+```
+
+<ResponseField name="available" type="number">
+  The amount of funds currently available to send or withdraw. This excludes any pending deposits or transfers that have not yet settled.
+</ResponseField>
+
+<ResponseField name="pending" type="number">
+  The total value of incoming deposits or transfers that have been initiated but not yet fully settled into your available balance.
+</ResponseField>
+
+<ResponseField name="currency" type="string">
+  The currency in which balances are denominated. Ocean Wallet accounts are always denominated in `USD`.
+</ResponseField>
+
+<Tip>
+  Poll this endpoint before initiating a send to confirm sufficient available balance and avoid failed transaction errors.
+</Tip>
